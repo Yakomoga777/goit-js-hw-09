@@ -10,7 +10,7 @@ const bodyEl = document.querySelector('body');
 startEl.addEventListener('click', onStartBtnClick);
 stopEl.addEventListener('click', onStopBtnClick);
 
-// let intervalId = null;
+let intervalId = null;
 
 //* Функція запуску
 function onStartBtnClick() {
