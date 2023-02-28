@@ -1,2 +1,0 @@
-!function(){function t(){return"#".concat(Math.floor(16777215*Math.random()).toString(16))}var e=document.querySelector("[data-start]"),o=document.querySelector("[data-stop]"),n=document.querySelector("body");e.addEventListener("click",(function(){n.style.backgroundColor=t(),intervalId=setInterval((function(){n.style.backgroundColor=t()}),1e3),console.log("Функція запуску зміни кольору")})),o.addEventListener("click",(function(){clearInterval(intervalId),console.log("Зупинка кольору")}))}();
-//# sourceMappingURL=01-color-switcher.04b2cb59.js.map
