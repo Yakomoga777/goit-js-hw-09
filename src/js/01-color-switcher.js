@@ -9,8 +9,16 @@ const bodyEl = document.querySelector('body');
 
 startEl.addEventListener('click', onStartBtnClick);
 stopEl.addEventListener('click', onStopBtnClick);
+stopEl.setAttribute('disabled', 'disabled');
 
 let intervalId = null;
+
+function btnEnable(el) {
+  el.removeAttribute('disabled');
+}
+function btnDesable(el) {
+  el.setAttribute('disabled', 'disabled');
+}
 
 //* Функція запуску
 function onStartBtnClick() {
@@ -19,11 +27,19 @@ function onStartBtnClick() {
   intervalId = setInterval(() => {
     bodyEl.style.backgroundColor = getRandomHexColor();
   }, 1000);
+
+  btnDesable(startEl);
+
+  btnEnable(stopEl);
+
   console.log('Функція запуску зміни кольору');
 }
 
 //* Функція зупинки
 function onStopBtnClick() {
+  startEl.removeAttribute('disabled');
+  stopEl.setAttribute('disabled', 'disabled');
+
   clearInterval(intervalId);
 
   console.log('Зупинка кольору');
