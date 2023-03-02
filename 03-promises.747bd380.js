@@ -1,2 +1,0 @@
-const e=document.querySelector(".form"),t=document.querySelector('[type="submit"]');document.querySelector('[name="delay"]'),document.querySelector('[name="step"]'),document.querySelector('[name="amount"]');e.addEventListener("input",(function(e){e.preventDefault(),console.log("click")})),t.addEventListener("submit",(function(e){e.preventDefault(),console.log(e),console.log("Submit - ")}));
-//# sourceMappingURL=03-promises.747bd380.js.map
