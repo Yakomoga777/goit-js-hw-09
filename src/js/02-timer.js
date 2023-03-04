@@ -35,15 +35,18 @@ const options = {
       timeContent(convertMs(ms));
       console.log(`true`);
     } else {
-      daysEl.textContent = '00';
-      hoursEl.textContent = '00';
-      minutesEl.textContent = '00';
-      secondsEl.textContent = '00';
+      reset();
 
       console.log(`false`);
     }
   },
 };
+function reset() {
+  daysEl.textContent = '00';
+  hoursEl.textContent = '00';
+  minutesEl.textContent = '00';
+  secondsEl.textContent = '00';
+}
 
 flatpickr('#datetime-picker', options);
 
