@@ -1,60 +1,67 @@
-function createPromise(position, delay) {
-  console.log('Виклик createPromise');
+import Notiflix from 'notiflix';
 
-  return new Promise(() => {
-    // delay = Number(firstDelay) + Number(delay);
-    const shouldResolve = Math.random() > 0.3;
-    if (shouldResolve) {
-      // Fulfill
-      console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-    } else {
-      // Reject
-      console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-    }
+function createPromise(position, delay) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const shouldResolve = Math.random() > 0.3;
+
+      if (shouldResolve) {
+        resolve({ position, delay });
+        // console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
+      } else {
+        reject({ position, delay });
+        // Reject
+        // console.log(`❌ Rejected promise ${position} in ${delay}ms`);
+      }
+    }, delay);
   });
 }
-// createPromise()
-//   .then(({ position, delay }) => {
-//     console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-//   })
-//   .catch(({ position, delay }) => {
-//     console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-//   });
 
 const formEl = document.querySelector('.form');
 const btnEl = document.querySelector('[type="submit"]');
-
 const inputDelayEl = document.querySelector('[name="delay"]');
 const inputStepEl = document.querySelector('[name="step"]');
 const inputAmountEl = document.querySelector('[name="amount"]');
 
-formEl.addEventListener('input', onFormInput);
-formEl.addEventListener('submit', onBtnSubmit);
+// formEl.addEventListener('input', onFormInput);
+formEl.addEventListener('submit', onFormSubmit);
 
-function onFormInput(event) {
-  // const delay = inputStepEl.value;
-  // console.log(delay);
-}
-function onBtnSubmit(event) {
+// function onFormInput(event) {}
+function onFormSubmit(event) {
   event.preventDefault();
-  const firstDelay = inputDelayEl.value;
-  const delay = inputStepEl.value;
+
+  let delay = Number(inputDelayEl.value);
+  const step = Number(inputStepEl.value);
   const amount = inputAmountEl.value;
+  btnEl.disabled = true;
+  for (let i = 1; i <= amount; i += 1) {
+    createPromise(i, delay)
+      .then(({ position, delay }) => {
+        Notiflix.Notify.success(
+          `✅ Fulfilled promise ${position} in ${delay}ms`
+        );
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.failure(
+          `❌ Rejected promise ${position} in ${delay}ms`
+        );
+      })
+      .finally(() => {
+        setTimeout(() => {
+          btnEl.disabled = false;
+        }, delay);
+      });
 
-  setTimeout(() => {
-    let position = 0;
-    let intID = 0;
-    intID = setInterval(e => {
-      position += 1;
+    delay += step;
+  }
+  // setTimeout(() => {
+  //   btnEl.disabled = false;
+  // }, delay);
+  // // console.log(`Сума часу = ${delay}`);
+  // btnEl.disabled = true;
 
-      createPromise(position, delay);
-
-      if (position == amount) {
-        clearInterval(intID);
-        // return;
-      }
-    }, delay);
-  }, firstDelay);
+  // console.log(btnEl.disabled);
+  console.log('Submit');
 }
 // createPromise(2, 1500)
 //   .then(({ position, delay }) => {

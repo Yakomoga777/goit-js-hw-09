@@ -139,3 +139,77 @@ function onBtnSubmit(event) {
 //   .catch(({ position, delay }) => {
 //     console.log(`❌ Rejected promise`);
 //   });
+
+// Опції для flatpickr
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    // Обробляємо дату, обрану користувачем
+    const selectedDate = selectedDates[0];
+    const now = new Date();
+    if (selectedDate <= now) {
+      window.alert('Please choose a date in the future');
+      startButton.disabled = true;
+    } else {
+      startButton.disabled = false;
+      countdown(selectedDate);
+    }
+  },
+};
+
+// Ініціалізація flatpickr на полі input#datetime-picker з опціями
+const flatpickrInstance = flatpickr('#datetime-picker', options);
+
+// Кнопка Start
+const startButton = document.querySelector('[data-start]');
+
+// Відображення таймера
+const timerDays = document.querySelector('[data-days]');
+const timerHours = document.querySelector('[data-hours]');
+const timerMinutes = document.querySelector('[data-minutes]');
+const timerSeconds = document.querySelector('[data-seconds]');
+
+// Обчислення часу до дати і оновлення інтерфейсу
+function countdown(targetDate) {
+  function updateTimer() {
+    const now = new Date();
+    const remainingTime = targetDate - now;
+    if (remainingTime <= 0) {
+      clearInterval(timerInterval);
+      timerDays.textContent = '00';
+      timerHours.textContent = '00';
+      timerMinutes.textContent = '00';
+      timerSeconds.textContent = '00';
+      return;
+    }
+    const remainingDays = Math.floor(remainingTime / (1000 * 60 * 60 * 24))
+      .toString()
+      .padStart(2, '0');
+    const remainingHours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24)
+      .toString()
+      .padStart(2, '0');
+    const remainingMinutes = Math.floor((remainingTime / 1000 / 60) % 60)
+      .toString()
+      .padStart(2, '0');
+    const remainingSeconds = Math.floor((remainingTime / 1000) % 60)
+      .toString()
+      .padStart(2, '0');
+    timerDays.textContent = remainingDays;
+    timerHours.textContent = remainingHours;
+    timerMinutes.textContent = remainingMinutes;
+    timerSeconds.textContent = remainingSeconds;
+  }
+
+  updateTimer();
+  const timerInterval = setInterval(updateTimer, 1000);
+
+  startButton.addEventListener('click', () => {
+    clearInterval(timerInterval);
+    countdown(targetDate);
+  });
+}
+
+startButton.disabled = true; // кнопка Start неактивна, поки не обрано валідну дату
