@@ -11,12 +11,22 @@ let secondsEl = document.querySelector('[data-seconds]');
 const btnEl = document.querySelector('[data-start]');
 
 btnEl.addEventListener('click', onBtnClick);
+btnEl.disabled = true;
+
 // onBtnClick = () => {};
 function onBtnClick() {
-  // setInterval(ms => {
-  //   const timer = ms - 1000;
-  //   console.log(timer);
-  // }, 1000);
+  btnEl.disabled = true;
+
+  const selected = datePickr.selectedDates[0];
+
+  setInterval(() => {
+    const ms = selected - new Date();
+    // console.log(ms);
+    render(convertMs(ms));
+    // console.log(dellta);
+    // console.log(startTime);
+    // console.log(currentTime);
+  }, 1000);
 }
 
 //Ініціалізуємо календар
@@ -28,27 +38,28 @@ const options = {
   onClose(selectedDates) {
     const start = new Date();
     const selected = new Date(selectedDates[0]);
+    const ms = selected - new Date();
+    console.log(selected.getTime());
 
     if (selected > start.getTime()) {
-      const ms = selected - start;
-
-      timeContent(convertMs(ms));
-      console.log(`true`);
+      btnEl.disabled = false;
+      render(convertMs(ms));
     } else {
+      btnEl.disabled = true;
+      window.alert('Please choose a date in the future');
       reset();
-
-      console.log(`false`);
+      return;
     }
   },
 };
+const datePickr = flatpickr('#datetime-picker', options);
+
 function reset() {
   daysEl.textContent = '00';
   hoursEl.textContent = '00';
   minutesEl.textContent = '00';
   secondsEl.textContent = '00';
 }
-
-flatpickr('#datetime-picker', options);
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -58,25 +69,33 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = Math.floor(ms / day);
+  const days = addLeadingZero(Math.floor(ms / day));
   // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const seconds = addLeadingZero(
+    Math.floor((((ms % day) % hour) % minute) / second)
+  );
 
   return { days, hours, minutes, seconds };
 
   // console.log('привіт');
 }
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
+}
 
-function timeContent({ days, hours, minutes, seconds }) {
+function render({ days, hours, minutes, seconds }) {
   daysEl.textContent = days;
   hoursEl.textContent = hours;
   minutesEl.textContent = minutes;
   secondsEl.textContent = seconds;
 
-  console.log({ days, hours, minutes, seconds });
+  // console.log({ days, hours, minutes, seconds });
+  // console.log(daysEl.textContent.);
+  // console.log(daysEl.textContent);
 }
+
 // console.log(timeContent(timeObject));
