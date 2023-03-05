@@ -19,13 +19,17 @@ function onBtnClick() {
 
   const selected = datePickr.selectedDates[0];
 
-  setInterval(() => {
+  const intervalId = setInterval(() => {
     const ms = selected - new Date();
     // console.log(ms);
     render(convertMs(ms));
     // console.log(dellta);
     // console.log(startTime);
     // console.log(currentTime);
+    if (ms <= 0) {
+      reset();
+      clearInterval(intervalId);
+    }
   }, 1000);
 }
 
